@@ -1,2 +1,2 @@
 Usage:
-Main.ps1 -InitialTime *time shift in milliseconds*
+Main.ps1 -InitialTime "*time shift in milliseconds*"
