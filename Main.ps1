@@ -1,3 +1,6 @@
+param (
+    [parameter(Mandatory=$false)] [int] $InitialTime = 0
+)
 nal -Name "tp" -Value "Test-Path" -ErrorAction SilentlyContinue
 ipmo "./modules/Errors.psm1"  -ErrorAction Stop
 ipmo "./modules/ReturnFormattedData.psm1"  -ErrorAction Stop
