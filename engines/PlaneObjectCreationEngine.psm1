@@ -62,8 +62,7 @@ function Generator {
     #[System.Random]$rnd = [System.Random]::new()
     switch ($Half)
 	{
-		"0"
-		{
+		"0" {
 			[hashtable]$Data = @{}
             $Data.Add("WorldTopLeftCornerCoords", $World.WorldTopLeftCornerCoords['longtitude'])
             $Data.Add("WorldTopRightCornerCoords", $World.WorldTopRightCornerCoords['longtitude'])
@@ -82,11 +81,13 @@ function Generator {
                         $true {
                             $longtitude = $rnd.Next($Data['WorldTopLeftCornerCoords']*1000000,180000001)
                             $longtitude = $longtitude / 1000000
+                            break;
                         }
                         $false {
                             $longtitude = $rnd.Next([System.Math]::Abs($Data['WorldTopRightCornerCoords']*1000000),180000001)
                             $longtitude = $longtitude / 1000000
                             $longtitude = $longtitude * (-1)
+                            break;
                         }
                     }
                     break;
@@ -106,6 +107,7 @@ function Generator {
                         $true
                         {
                             $Angle = 360 + ($Angle)
+                            break;
                         }
                     }
                     $latitude = $World.WorldBottomLeftCornerCoords['latitude']
@@ -120,11 +122,9 @@ function Generator {
 			$AngleAndCoords.Add("Angle", $Angle)
 			$AngleAndCoords.Add("Half", $Half)
             return $AngleAndCoords
-            break;
 		}
 		
-		"1"
-		{
+		"1" {
             [hashtable]$Data = @{}
             $Data.Add("WorldTopLeftCornerCoords", $World.WorldTopLeftCornerCoords['latitude'])
             $Data.Add("WorldBottomLeftCornerCoords", $World.WorldBottomLeftCornerCoords['latitude'])
@@ -154,12 +154,15 @@ function Generator {
                                 $true {
                                     $latitude = $rnd.Next([System.Math]::Abs($Data['WorldTopLeftCornerCoords']*1000000),90000001)
                                     $latitude = $latitude / 1000000
+                                    break;
                                 }
                                 $false {
                                     $latitude = $rnd.Next([System.Math]::Abs($Data['WorldBottomLeftCornerCoordss']*1000000),90000001)
                                     $latitude = $latitude / 1000000
+                                    break;
                                 }
                             }
+                            break;
                         }
                     }
                     break;

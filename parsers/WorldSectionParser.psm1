@@ -19,10 +19,12 @@ function CheckWorldSectionConfiguration {
                     }
                 }
             }
+            break;
         }
         default {
             [string]$ErrorMessage = "Not enough params! Check config file!"
             ShowMessageWrongConf -ErrorType "Config" -ErrorMessage $ErrorMessage -Section $WorldSection.Name
+            break;
         }
     }
     switch ($WorldLeftCornerCoords.DataIsCorrect -and $WorldSide.DataIsCorrect) {
@@ -34,25 +36,25 @@ function CheckWorldSectionConfiguration {
             switch ($null -eq $WorldLeftCornerCoords) {
                 $true {
                     ShowMessageWrongConf -Section $WorldSection.Name -ParameterName "Point" -ErrorMessage "Parameter is not specified"
-                    return $null;
+                    break;
                 }
             }
             switch ($null -eq $WorldSide) {
                 $true {
                     ShowMessageWrongConf -Section $WorldSection.Name -ParameterName "Distance" -ErrorMessage "Parameter is not specified"
-                    return $null;
+                    break;
                 }
             }
             switch ($false -eq $WorldLeftCornerCoords.DataIsCorrect) {
                 $true {
                     ShowMessageWrongConf -Section $WorldSection.Name -ParameterName "Point" -ErrorMessage $WorldsLeftCornerCoords.ErrorMessage
-                    return $null;
+                    break;
                 }
             }
             switch ($null -eq $WorldSide.DataIsCorrect) {
                 $true {
                     ShowMessageWrongConf -Section $WorldSection.Name -ParameterName "Distance" -ErrorMessage $WorldsSide.ErrorMessage
-                    return $null;
+                    break;
                 }
             }
         }

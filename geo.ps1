@@ -22,9 +22,11 @@ for ($PatternIndex = 0; $PatternIndex -lt $PatternsToGenerateConfiguration.Count
             $TempData.Add("PatternConfiguration",$PlanePatternConfiguration[$PatternsToGenerateConfiguration[$PatternIndex.ToString()].PatternName])
             $TempData.Add("Count",$PatternsToGenerateConfiguration[$PatternIndex.ToString()].Count)
             $CompleteConfiguration.Add($PatternIndex.ToString(),$TempData)
+            break;
         }
         $false {
             ShowMessageWrongConf -Section $Configuration.conf.sectionMain.Name -ParameterName "PatternsToUse" -ErrorMessage ("The template " + $PatternsToGenerateConfiguration[$PatternIndex.ToString()].PatternName +" is not described! Check config file!")
+            break;
         }
     }
 }
@@ -38,14 +40,14 @@ for ($PatternIndex = 0; $PatternIndex -lt $CompleteConfiguration.Count; $Pattern
         $CurrStep = -1
         while ($Plane.CanFly) {
             $CurrStep++
-            if ($CurrStep -ge 1000) {
+            if ($CurrStep -ge 5000) {
                 break;
             }
             switch ($PlaneIsOnMap) {
                 $false {
                     [System.Int64]$Milisecond = $Step
                     [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
-                    $OutputResult = "s" + $Milisecond.ToString() + "t" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID
+                    $OutputResult = "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID
                     Add-Content -Path $OutputConfigFilepath -Value $OutputResult
                     $PlaneIsOnMap = $true
                     break;
@@ -57,7 +59,7 @@ for ($PatternIndex = 0; $PatternIndex -lt $CompleteConfiguration.Count; $Pattern
                     $Step ++
                     [System.Int64]$Milisecond = $Plane.RefreshRate + $Milisecond
                     [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
-                    $OutputResult = "s" + $Milisecond.ToString() + "t" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID
+                    $OutputResult = "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID
                     Add-Content -Path $OutputConfigFilepath -Value $OutputResult
                     break;
                 }
@@ -67,5 +69,5 @@ for ($PatternIndex = 0; $PatternIndex -lt $CompleteConfiguration.Count; $Pattern
             }
         }
     }
-    Get-Content $OutputConfigFilepath | Sort-Object -Property {$_.Substring(1,$_.IndexOf("t")).Length;"$_[0..9]"} | Set-Content $OutputConfigFilepath
+    Get-Content $OutputConfigFilepath | Sort-Object -Property {$_.Substring(1,$_.IndexOf(">")).Length;"$_[0..9]"} | Set-Content $OutputConfigFilepath
 }

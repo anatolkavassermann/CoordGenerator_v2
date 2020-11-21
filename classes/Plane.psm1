@@ -48,7 +48,7 @@ class Plane : GEO_classes.TestPlane {
         switch (($this.CurrentHeight -gt $this.MaxHeight) -or ($this.CurrentHeight -lt $this.MinHeight)) {
             $true {
                 $this.CanFly = $false
-                return
+                return;
             }
 		}
 		[hashtable]$TempCoords = @{}
@@ -65,7 +65,8 @@ class Plane : GEO_classes.TestPlane {
 								$this.CanFly = $false
 								return;
 							}
-						}
+                        }
+                        break;
                     }
                     $false {
                         switch (($TempCoords['latitude'] -lt $this.World.WorldTopLeftCornerCoords['latitude']) -or ($TempCoords['latitude'] -lt $this.World.WorldBottomLeftCornerCoords['latitude']))
@@ -75,17 +76,20 @@ class Plane : GEO_classes.TestPlane {
 								$this.CanFly = $false
 								return;
 							}
-						}
+                        }
+                        break;
                     }
                 }
+                break;
             }
             $false {
                 switch (($TempCoords['latitude'] -gt $this.World.WorldTopLeftCornerCoords['latitude']) -or ($TempCoords['latitude'] -lt $this.World.WorldBottomLeftCornerCoords['latitude'])){
                     $true {
                         $this.CanFly = $false
                         return
-                     }
+                    }
                 }
+                break;
             }
         }
         # Проверка выхода за долготу
@@ -99,7 +103,7 @@ class Plane : GEO_classes.TestPlane {
         }
         
         $this.Coords = $TempCoords
-        return
+        return;
     }
     [void] MakeStep () {
         switch ($this.CanFly) {
@@ -110,38 +114,46 @@ class Plane : GEO_classes.TestPlane {
 				    0
 				    {
 			    		$this.RotateLeft()
-			    		$this.Move()
+                        $this.Move()
+                        break;
 			    	}
                     1
 				    {
 				    	$this.RotateRight()
-				    	$this.Move()
+                        $this.Move()
+                        break;
 				    }
     				2
 	    			{
 		    			$this.IncreaseSpeed()
-			    		$this.Move()
+                        $this.Move()
+                        break;
 				    }
     				3
 	    			{
 		    			$this.DecreaseSpeed()
-			    		$this.Move()
+                        $this.Move()
+                        break;
 				    }
     				4
 	    			{
 		    			$this.NoseUp()
-			    		$this.Move()
+                        $this.Move()
+                        break;
 				    }
     				5
     				{
 	    				$this.NoseDown()
-		    			$this.Move()
+                        $this.Move()
+                        break;
 			    	}
 				    default
     				{
-	    				$this.Move()
+                        $this.Move()
+                        break;
 		    		}
-			    }
+                }
+                break;
             }
         }
     }

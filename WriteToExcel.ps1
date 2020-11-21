@@ -1,4 +1,4 @@
-[System.String[]]$AllMillisecondsStr = gc -Path "./conf/Output.txt" | % {$_.Substring(1,$_.IndexOf("t")-1)}
+[System.String[]]$AllMillisecondsStr = gc -Path "./conf/Output.txt" | % {$_.Substring(1,$_.IndexOf(">")-1)}
 [System.Int64[]]$AllMilliseconds = $AllMillisecondsStr | Sort-Object -Unique
 [System.Array]::Sort($AllMilliseconds)
 $OutputConfigFile = Get-Content "./conf/Output.txt"
@@ -14,15 +14,15 @@ while ($i -lt $AllMilliseconds.Count-1) {
     if ($i -gt $AllMilliseconds.Count-1) {
         $i --
     }
-    $k = ($OutputConfigFile| Select-String -Pattern ("s" + $AllMilliseconds[$i] + "t")).Matches.Count
+    $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).Matches.Count
     if ($k -gt 1) {
-        $k = ($OutputConfigFile| Select-String -Pattern ("s" + $AllMilliseconds[$i] + "t")).LineNumber
+        $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).LineNumber
         $k = $k[$k.Count-1]
     }
     if ($k -eq 1) {
-        $k = ($OutputConfigFile| Select-String -Pattern ("s" + $AllMilliseconds[$i] + "t")).LineNumber
+        $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).LineNumber
     }
-    $Count = ($OutputConfigFile[$l..$k] | % {$j = $_.Substring($_.IndexOf("t")+1,$_.Length -$_.IndexOf("t")-1 ) -split ";"; [array]::Reverse($j); return $j[0]} | Sort-Object -Unique).Count
+    $Count = ($OutputConfigFile[$l..$k] | % {$j = $_.Substring($_.IndexOf(">")+1,$_.Length -$_.IndexOf(">")-1 ) -split ";"; [array]::Reverse($j); return $j[0]} | Sort-Object -Unique).Count
     [void] $DataForExcel.Add(($shift,$Count))
     $l = $k
     $shift+= 10000
@@ -41,7 +41,7 @@ $ws.Range("A1").Select | Out-Null
 $ws.paste()
 $ws.UsedRange.Columns.AutoFit() | Out-Null
 
-$ws.Range("B1:B"+$DataForExcel.Count).Select()
+$ws.Range("B1:B"+($DataForExcel.Count+1)).Select()
 $Chart = $ws.Shapes.AddChart().Chart
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlLine
 Pause

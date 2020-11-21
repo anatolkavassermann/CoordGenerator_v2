@@ -15,6 +15,7 @@ function CheckMainSectionConfiguration () {
 							{
                                 [System.String[]]$PatternNames = $Parameter.Data.Split("|")
                                 $PatternNames | % {if ($_ -eq ""){ShowMessageWrongConf -Section $MainSection.Name -ParameterName $Parameter.ParamName -ErrorMessage "Pattern name cannot be empty"}}
+                                break;
 							}
 							"EachPatternCount"
 							{
@@ -23,12 +24,15 @@ function CheckMainSectionConfiguration () {
 								for ($EPC = 0; $EPC -lt $PatternNames.Length; $EPC++)
 								{
                                     $EachPatternCount[$EPC] = [System.Convert]::ToInt16($EachPatternCountStr[$EPC])
-								}
+                                }
+                                break;
 							}
-						}
-                     }
+                        }
+                        break;
+                    }
                     $false {
                         ShowMessageWrongConf -Section $MainSection.Name -ErrorMessage "Not enough information about parameter!"
+                        break;
                     }
                 }
             }
@@ -41,9 +45,11 @@ function CheckMainSectionConfiguration () {
                 $PlanesToGenerate += $EachPatternCount[$EachPatternNameIndex]
             }
             $PatternsToUseAndPlanesToGenerate.Add("PlanesToGenerateCount",$PlanesToGenerate)
-         }
+            break;
+        }
         $false {
             ShowMessageWrongConf -Section $MainSection.Name -ErrorMessage "Not enough parameters specified"
+            break;
         }
     }
     return $PatternsToUseAndPlanesToGenerate

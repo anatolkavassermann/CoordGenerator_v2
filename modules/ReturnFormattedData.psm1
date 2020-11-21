@@ -35,6 +35,7 @@ function ReturnFormattedData {
         $false {
             [string]$ErrorMessage = "ParamName, Data and ParamDataType cannot be empty! Check config file!"
             ShowMessageWrongConf -ErrorType "Config" -ErrorMessage $ErrorMessage -Section $Section -ParameterName $Parameter.ParamName -PatternName $PatternName
+            break;
         }
     }
 }

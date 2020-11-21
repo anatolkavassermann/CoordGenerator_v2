@@ -23,9 +23,11 @@ function CheckPlaneSectionConfiguration () {
 					return $PlanePatterns
 				}
 			}
-		 }
+			break;
+		}
 		$false {
 			ShowMessageWrongConf -Section $PlaneSection.Name -ErrorMessage "No patterns specified!"
+			break;
 		}
 	}
 }
@@ -39,13 +41,16 @@ function Checker () {
 	switch ($PlanePattern.PatternName -eq "") {
 		$true {
 			ShowMessageWrongConf -Section $Section -ParameterName "PatternName" -ErrorMessage "PatternName cannot be empty! Check config file!"
+			break;
 		}
 		$false {
 			switch ($PlanePattern.RefreshRate -eq "") {
 				$true {
 					ShowMessageWrongConf -Section $Section -ParameterName "RefreshRate" -ErrorMessage "RefreshRate cannot be empty! Check config file!"
+					break;
 				}
 			}
+			break;
 		}
 	}
 	[System.String]$PatternName = $PlanePattern.PatternName
@@ -58,65 +63,81 @@ function Checker () {
 						$MinSpeed = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MinSpeed.DataIsCorrect) {
                             $false {
-                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MinSpeed.ErrorMessage
-                            }
-                        }
+								ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MinSpeed.ErrorMessage
+								break;
+							}
+						}
+						break;
 					}
 					"MaxSpeed" {
 						$MaxSpeed = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MaxSpeed.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxSpeed.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"SpeedAdjust" {
 						$SpeedAdjust = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($SpeedAdjust.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedAdjust.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"SpeedDecrease" {
 						$SpeedDecrease = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($SpeedDecrease.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedDecrease.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"MinHeight" {
 						$MinHeight = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MinHeight.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MinHeight.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"MaxHeight" {
 						$MaxHeight = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MaxHeight.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxHeight.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"MaxUpDownAngle" {
 						$MaxUpDownAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MaxUpDownAngle.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxUpDownAngle.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 					"MaxRotateAngle" {
 						$MaxRotateAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
 						switch ($MaxRotateAngle.DataIsCorrect) {
                             $false {
                                 ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxRotateAngle.ErrorMessage
-                            }
-                        }
+								break;
+							}
+						}
+						break;
 					}
 				}
 			}
@@ -137,12 +158,15 @@ function Checker () {
                     return $PlanePatternConfiguration
                 }
                 $false {
-                    ShowMessageWrongConf -Section $Section -PatternName $PatternName -ErrorMessage "MinHeight param must be less than or equal to the MaxHeight param and MinSpeed param must be less than or equal to the MaxSpeed param"
+					ShowMessageWrongConf -Section $Section -PatternName $PatternName -ErrorMessage "MinHeight param must be less than or equal to the MaxHeight param and MinSpeed param must be less than or equal to the MaxSpeed param"
+					break;
                 }
-            }	
+			}	
+			break;
 		}
 		$false {
 			ShowMessageWrongConf -Section $Section -PatternName $PatternName -ErrorMessage "Not enough parameters specified"
+			break;
 		}
 	}
 }
