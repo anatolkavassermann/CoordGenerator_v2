@@ -1,6 +1,3 @@
-ipmo "./modules/Errors.psm1"  -ErrorAction Stop
-ipmo "./modules/ReturnFormattedData.psm1" -ErrorAction Stop
-
 function CheckWorldSectionConfiguration {
     param (
         [parameter(Mandatory=$true)] [System.Xml.XmlNode] $WorldSection

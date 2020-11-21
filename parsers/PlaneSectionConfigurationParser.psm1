@@ -1,6 +1,3 @@
-ipmo "./modules/Errors.psm1"  -ErrorAction Stop
-ipmo "./parsers/WorldSectionParser.psm1"  -ErrorAction Stop
-ipmo "./engines/WorldCoordsCreationEngine.psm1" -ErrorAction Stop
 function CheckPlaneSectionConfiguration () {
 	param(
         [parameter (Mandatory=$true)] [System.Xml.XmlNode] $PlaneSection

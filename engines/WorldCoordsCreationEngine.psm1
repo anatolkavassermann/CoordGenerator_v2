@@ -1,4 +1,3 @@
-ipmo ".\engines\CoordsCalculation.psm1"  -ErrorAction Stop
 function CalculateWorldsCoords {
     param (
         [parameter(Mandatory=$true)] [hashtable] $WorldConfiguration

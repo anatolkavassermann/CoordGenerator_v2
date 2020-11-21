@@ -1,9 +1,11 @@
+param (
+    [parameter(Mandatory=$false)] [System.Int32] $shift = 10000
+)
 [System.String[]]$AllMillisecondsStr = gc -Path "./conf/Output.txt" | % {$_.Substring(1,$_.IndexOf(">")-1)}
 [System.Int64[]]$AllMilliseconds = $AllMillisecondsStr | Sort-Object -Unique
 [System.Array]::Sort($AllMilliseconds)
 $OutputConfigFile = Get-Content "./conf/Output.txt"
 $DataForExcel = [System.Collections.ArrayList]::new()
-$shift = 5000
 $Count = 0
 $i = 0
 $l = 0

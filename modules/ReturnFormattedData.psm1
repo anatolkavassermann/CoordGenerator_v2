@@ -1,4 +1,3 @@
-ipmo "./modules/Errors.psm1"  -ErrorAction Stop
 Add-Type ((gc .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections"
 
 function ReturnFormattedData {
