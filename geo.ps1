@@ -1,7 +1,7 @@
 using module "./classes/Plane.psm1"
 
 param (
-    [int]$InitialTime
+    [parameter(Mandatory=$false)][System.Int16]$InitialTime = 0
 )
 
 tp ".\conf\Output.txt" | % {if ($_ -eq $false) {ni -i File -p ".\conf\Output.txt" | rvpa}; if ($_ -eq $true) {gci ".\conf\Output.txt" | rvpa}} | sv OutputConfigFilepath

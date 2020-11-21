@@ -70,19 +70,19 @@ function Checker () {
                             }
                         }
 					}
-					"SpeedAdj" {
-						$SpeedAdj = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
-						switch ($SpeedAdj.DataIsCorrect) {
+					"SpeedAdjust" {
+						$SpeedAdjust = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
+						switch ($SpeedAdjust.DataIsCorrect) {
                             $false {
-                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedAdj.ErrorMessage
+                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedAdjust.ErrorMessage
                             }
                         }
 					}
-					"SpeedDec" {
-						$SpeedDec = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
-						switch ($SpeedDec.DataIsCorrect) {
+					"SpeedDecrease" {
+						$SpeedDecrease = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
+						switch ($SpeedDecrease.DataIsCorrect) {
                             $false {
-                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedDec.ErrorMessage
+                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $SpeedDecrease.ErrorMessage
                             }
                         }
 					}
@@ -102,19 +102,19 @@ function Checker () {
                             }
                         }
 					}
-					"MaxUpAngle" {
-						$MaxUpAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
-						switch ($MaxUpAngle.DataIsCorrect) {
+					"MaxUpDownAngle" {
+						$MaxUpDownAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
+						switch ($MaxUpDownAngle.DataIsCorrect) {
                             $false {
-                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxUpAngle.ErrorMessage
+                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxUpDownAngle.ErrorMessage
                             }
                         }
 					}
-					"MaxRotAngle" {
-						$MaxRotAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
-						switch ($MaxRotAngle.DataIsCorrect) {
+					"MaxRotateAngle" {
+						$MaxRotateAngle = ReturnFormattedData -Section $Section -Parameter $Parameter -PatternName $PatternName
+						switch ($MaxRotateAngle.DataIsCorrect) {
                             $false {
-                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxRotAngle.ErrorMessage
+                                ShowMessageWrongConf -Section $Section -PatternName $PatternName -ParameterName $Parameter.ParamName -ErrorMessage $MaxRotateAngle.ErrorMessage
                             }
                         }
 					}
@@ -127,12 +127,12 @@ function Checker () {
                         'RefreshRate'	    = $RefreshRate;
                         'MinSpeed'		    = $MinSpeed.FormattedData;
                         'MaxSpeed'		    = $MaxSpeed.FormattedData;
-                        'SpeedAdjust'	    = $SpeedAdj.FormattedData;
-                        'SpeedDecrease'	    = $SpeedDec.FormattedData;
+                        'SpeedAdjust'	    = $SpeedAdjust.FormattedData;
+                        'SpeedDecrease'	    = $SpeedDecrease.FormattedData;
                         'MinHeight'	 	   	= $MinHeight.FormattedData;
                         'MaxHeight'	    	= $MaxHeight.FormattedData;
-                        'MaxUpDownAngle'    = $MaxUpAngle.FormattedData;
-                        'MaxRotateAngle'    = $MaxRotAngle.FormattedData;
+                        'MaxUpDownAngle'    = $MaxUpDownAngle.FormattedData;
+                        'MaxRotateAngle'    = $MaxRotateAngle.FormattedData;
                     }
                     return $PlanePatternConfiguration
                 }

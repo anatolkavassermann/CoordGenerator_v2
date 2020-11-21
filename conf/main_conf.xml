@@ -39,12 +39,12 @@
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>SpeedAdj</ParamName>
+					<ParamName>SpeedAdjust</ParamName>
 					<Data>24</Data>
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>SpeedDec</ParamName>
+					<ParamName>SpeedDecrease</ParamName>
 					<Data>21</Data>
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
@@ -59,12 +59,12 @@
 					<ParamDataType>Height</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>MaxUpAngle</ParamName>
+					<ParamName>MaxUpDownAngle</ParamName>
 					<Data>35</Data>
 					<ParamDataType>Angle</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>MaxRotAngle</ParamName>
+					<ParamName>MaxRotateAngle</ParamName>
 					<Data>14</Data>
 					<ParamDataType>Angle</ParamDataType>
 				</Param>
@@ -85,12 +85,12 @@
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>SpeedAdj</ParamName>
+					<ParamName>SpeedAdjust</ParamName>
 					<Data>44</Data>
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>SpeedDec</ParamName>
+					<ParamName>SpeedDecrease</ParamName>
 					<Data>48</Data>
 					<ParamDataType>Speed</ParamDataType>
 				</Param>
@@ -105,12 +105,12 @@
 					<ParamDataType>Height</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>MaxUpAngle</ParamName>
+					<ParamName>MaxUpDownAngle</ParamName>
 					<Data>78</Data>
 					<ParamDataType>Angle</ParamDataType>
 				</Param>
 				<Param>
-					<ParamName>MaxRotAngle</ParamName>
+					<ParamName>MaxRotateAngle</ParamName>
 					<Data>80</Data>
 					<ParamDataType>Angle</ParamDataType>
 				</Param>
