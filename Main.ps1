@@ -11,4 +11,4 @@ ipmo "./parsers/WorldSectionParser.psm1"  -ErrorAction Stop
 ipmo "./parsers/PlaneSectionConfigurationParser.psm1" -ErrorAction Stop
 ipmo "./parsers/MainSectionConfigurationParser.psm1" -ErrorAction Stop
 Add-Type ((gc .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections" -ErrorAction SilentlyContinue
-./geo.ps1 -InitialTime 5000
+./geo.ps1 -InitialTime $InitialTime

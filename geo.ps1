@@ -1,7 +1,7 @@
 using module "./classes/Plane.psm1"
 
 param (
-    [parameter(Mandatory=$false)][System.Int16]$InitialTime = 0
+    [parameter(Mandatory=$true)][System.Int16]$InitialTime = 0
 )
 
 tp ".\conf\Output.txt" | % {if ($_ -eq $false) {ni -i File -p ".\conf\Output.txt" | rvpa}; if ($_ -eq $true) {gci ".\conf\Output.txt" | rvpa}} | sv OutputConfigFilepath
@@ -71,3 +71,5 @@ for ($PatternIndex = 0; $PatternIndex -lt $CompleteConfiguration.Count; $Pattern
     }
     Get-Content $OutputConfigFilepath | Sort-Object -Property {$_.Substring(1,$_.IndexOf(">")).Length;"$_[0..9]"} | Set-Content $OutputConfigFilepath
 }
+Pause
+Write-Host -Object "Finished!" -ForegroundColor Green
