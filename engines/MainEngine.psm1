@@ -1,9 +1,9 @@
 using module "./classes/Plane.psm1"
 function GenerateCompleteConfiguration {
     param (
-        [parameter(Mandatory=$true)] $_WorldCoordConfiguration,
-        [parameter(Mandatory=$true)] $_PlanePatternConfiguration,
-        [parameter(Mandatory=$true)] $_PatternsToGenerateConfiguration
+        [parameter(Mandatory=$true)] [GEO_classes.World] $_WorldCoordConfiguration,
+        [parameter(Mandatory=$true)] [hashtable] $_PlanePatternConfiguration,
+        [parameter(Mandatory=$true)] [hashtable] $_PatternsToGenerateConfiguration
     )
     $_CompleteConfiguration = @{}
     for ($PatternIndex = 0; $PatternIndex -lt $_PatternsToGenerateConfiguration.Count-1; $PatternIndex++) {
@@ -26,7 +26,7 @@ function GenerateCompleteConfiguration {
 }
 function GenerateCoords {
     param (
-        [parameter(Mandatory=$true)] $_CompleteConfiguration,
+        [parameter(Mandatory=$true)] [hashtable] $_CompleteConfiguration,
         [parameter(Mandatory=$true)] $_OutputConfigFilepath
     )
     [System.Random]$rnd = [System.Random]::new()
