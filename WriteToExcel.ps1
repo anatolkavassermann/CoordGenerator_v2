@@ -1,50 +1,48 @@
 param (
     [parameter(Mandatory=$false)] [System.Int32] $shift = 10000
 )
-[System.String[]]$AllMillisecondsStr = gc -Path "./conf/Output.txt" | % {$_.Substring(1,$_.IndexOf(">")-1)}
-[System.Int64[]]$AllMilliseconds = $AllMillisecondsStr | Sort-Object -Unique
-[System.Array]::Sort($AllMilliseconds)
-$OutputConfigFile = Get-Content "./conf/Output.txt"
 $DataForExcel = [System.Collections.ArrayList]::new()
-$Count = 0
 $i = 0
-$l = 0
 $TimeShift = $shift
-while ($i -lt $AllMilliseconds.Count-1) {
-    while (($AllMilliseconds[$i] -le $shift) -and ($i -lt $AllMilliseconds.Count)) {
-        $i++
+$OutputConfigFile = gc "./conf/Output.txt"
+$OutputConfigFile | % {
+    $t = 0
+    $s = [System.Int32]::TryParse($_.Substring(1,$_.IndexOf(">")-1), [ref] $t)
+    if ($s -eq $true) {
+        if ($t -ge $TimeShift) {
+            $Matches = $OutputConfigFile | Select-String $_
+            $k = $Matches.Matches.Count
+            if ($k -gt 1) {
+                $k = $Matches.LineNumber
+                $k = $k[$k.Count-1]
+            }
+            if ($k -eq 1) {
+                $k = $Matches.LineNumber
+            }
+            $Count = ($OutputConfigFile[$i..$k] | % {$j = $_ -split ";"; [array]::Reverse($j); return $j[0]} | sort -Unique).Count
+            [void] $DataForExcel.Add(($TimeShift, $Count))
+            $i = $k
+            $TimeShift += $shift
+        }
     }
-    if ($i -gt $AllMilliseconds.Count-1) {
-        $i --
-    }
-    $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).Matches.Count
-    if ($k -gt 1) {
-        $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).LineNumber
-        $k = $k[$k.Count-1]
-    }
-    if ($k -eq 1) {
-        $k = ($OutputConfigFile| Select-String -Pattern ("<" + $AllMilliseconds[$i] + ">")).LineNumber
-    }
-    $Count = ($OutputConfigFile[$l..$k] | % {$j = $_.Substring($_.IndexOf(">")+1,$_.Length -$_.IndexOf(">")-1 ) -split ";"; [array]::Reverse($j); return $j[0]} | Sort-Object -Unique).Count
-    [void] $DataForExcel.Add(($shift,$Count))
-    $l = $k
-    $TimeShift+= $shift
 }
-
 Add-Type -AssemblyName Microsoft.Office.Interop.Excel
 $xl = New-Object -ComObject Excel.Application
 $xl.DisplayAlerts = $false
-$OutputData = $DataForExcel|ForEach-Object{[PSCustomObject][Ordered]@{'Milliseconds'=$_[0];'Count'=$_[1]}}
+$OutputData = $DataForExcel|%{[PSCustomObject][Ordered]@{'Count'=$_[0];"TimeShift"=$_[1]}}
 $wb = $xl.workbooks.Add()
 $ws = $wb.ActiveSheet
 $xl.Visible = $true
-
 $OutputData | ConvertTo-Csv -NoTypeInformation -Delimiter "`t" | C:\Windows\System32\clip.exe
 $ws.Range("A1").Select | Out-Null
 $ws.paste()
 $ws.UsedRange.Columns.AutoFit() | Out-Null
-
-$ws.Range("B1:B"+($DataForExcel.Count+1)).Select()
+#TODO
+#[void]($range = $WS.UsedRange)
+#$transposedRange  = $xl.WorksheetFunction.Transpose($range.Value2)
+#[void] $range.Delete()
+#$xl.ActiveSheet.Range("A1").Resize($transposedRange.GetUpperBound(0), $transposedRange.GetUpperBound(1)) = $transposedRange
+[void]$ws.UsedRange.Select()
 $Chart = $ws.Shapes.AddChart().Chart
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlLine
 Pause
