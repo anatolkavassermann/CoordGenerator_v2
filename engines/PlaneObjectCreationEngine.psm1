@@ -59,7 +59,7 @@ function Generator {
         [System.String]$Half, 
         [GEO_classes.World]$World
     )
-    #[System.Random]$rnd = [System.Random]::new()
+    [System.Random]$rnd = [System.Random]::new()
     switch ($Half)
 	{
 		"0" {
