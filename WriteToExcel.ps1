@@ -9,6 +9,7 @@ $DataForExcel = [System.Collections.ArrayList]::new()
 $Count = 0
 $i = 0
 $l = 0
+$TimeShift = $shift
 while ($i -lt $AllMilliseconds.Count-1) {
     while (($AllMilliseconds[$i] -le $shift) -and ($i -lt $AllMilliseconds.Count)) {
         $i++
@@ -27,7 +28,7 @@ while ($i -lt $AllMilliseconds.Count-1) {
     $Count = ($OutputConfigFile[$l..$k] | % {$j = $_.Substring($_.IndexOf(">")+1,$_.Length -$_.IndexOf(">")-1 ) -split ";"; [array]::Reverse($j); return $j[0]} | Sort-Object -Unique).Count
     [void] $DataForExcel.Add(($shift,$Count))
     $l = $k
-    $shift+= 10000
+    $TimeShift+= $shift
 }
 
 Add-Type -AssemblyName Microsoft.Office.Interop.Excel
