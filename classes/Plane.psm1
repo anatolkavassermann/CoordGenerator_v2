@@ -156,5 +156,6 @@ class Plane : GEO_classes.TestPlane {
                 break;
             }
         }
+        return;
     }
 }

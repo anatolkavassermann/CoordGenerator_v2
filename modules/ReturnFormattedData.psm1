@@ -30,6 +30,7 @@ function ReturnFormattedData {
                     return $Data;
                 }
             }
+            break;
         }
         $false {
             [string]$ErrorMessage = "ParamName, Data and ParamDataType cannot be empty! Check config file!"

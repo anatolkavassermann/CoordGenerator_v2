@@ -19,12 +19,8 @@ function CheckMainSectionConfiguration () {
 							}
 							"EachPatternCount"
 							{
-								[System.String[]]$EachPatternCountStr = $Parameter.Data.Split("|")
-								[System.Int16[]]$EachPatternCount = [System.Int16[]]::new($PatternNames.Length)
-								for ($EPC = 0; $EPC -lt $PatternNames.Length; $EPC++)
-								{
-                                    $EachPatternCount[$EPC] = [System.Convert]::ToInt16($EachPatternCountStr[$EPC])
-                                }
+                                [System.Collections.ArrayList]$EachPatternCount = [System.Collections.ArrayList]::new()
+                                $Parameter.Data.Split("|") | % {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
                                 break;
 							}
                         }
