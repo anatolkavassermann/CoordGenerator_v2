@@ -1,5 +1,5 @@
 param (
-    [parameter(Mandatory=$false)] [System.Int32] $shift = 10000
+    [parameter(Mandatory=$false)] [System.Int32] $shift = 20000
 )
 $DataForExcel = [System.Collections.ArrayList]::new()
 $i = 0
@@ -10,17 +10,19 @@ $OutputConfigFile | % {
     $s = [System.Int32]::TryParse($_.Substring(1,$_.IndexOf(">")-1), [ref] $t)
     if ($s -eq $true) {
         if ($t -ge $TimeShift) {
-            $Matches = $OutputConfigFile | Select-String $_
-            $k = $Matches.Matches.Count
-            if ($k -gt 1) {
-                $k = $Matches.LineNumber
-                $k = $k[$k.Count-1]
+            $Matchess = $OutputConfigFile | Select-String $_
+            switch ($Matchess.Matches.Count -eq 1) {
+                $true {
+                    $k = $Matchess.LineNumber
+                    break;
+                }
+                $false {
+                    $k = $Matchess.LineNumber[$Matchess.LineNumber.Count-1]
+                    break;
+                }
             }
-            if ($k -eq 1) {
-                $k = $Matches.LineNumber
-            }
-            $Count = ($OutputConfigFile[$i..$k] | % {$j = $_ -split ";"; [array]::Reverse($j); return $j[0]} | sort -Unique).Count
-            [void] $DataForExcel.Add(($TimeShift, $Count))
+            $Count = (($OutputConfigFile[$i..$k] | foreach {$_[3]}) | sort -Unique).Count
+            [void] $DataForExcel.Add(($TimeShift,$Count))
             $i = $k
             $TimeShift += $shift
         }
@@ -29,22 +31,23 @@ $OutputConfigFile | % {
 Add-Type -AssemblyName Microsoft.Office.Interop.Excel
 $xl = New-Object -ComObject Excel.Application
 $xl.DisplayAlerts = $false
-$OutputData = $DataForExcel|%{[PSCustomObject][Ordered]@{'Count'=$_[0];"TimeShift"=$_[1]}}
+$OutputData = $DataForExcel | % { [PSCustomObject][Ordered]@{"TimeShift" = $_[0]; 'Count'=$_[1]}} | ConvertTo-Csv -NoTypeInformation -Delimiter "`t" 
 $wb = $xl.workbooks.Add()
+[void] $wb.ActiveSheet.Select()
 $ws = $wb.ActiveSheet
 $xl.Visible = $true
-$OutputData | ConvertTo-Csv -NoTypeInformation -Delimiter "`t" | C:\Windows\System32\clip.exe
-$ws.Range("A1").Select | Out-Null
+$OutputData | Set-Clipboard
+[void] $ws.Range("A1").Select()
 $ws.paste()
-$ws.UsedRange.Columns.AutoFit() | Out-Null
-#TODO
-#[void]($range = $WS.UsedRange)
-#$transposedRange  = $xl.WorksheetFunction.Transpose($range.Value2)
-#[void] $range.Delete()
-#$xl.ActiveSheet.Range("A1").Resize($transposedRange.GetUpperBound(0), $transposedRange.GetUpperBound(1)) = $transposedRange
-[void]$ws.UsedRange.Select()
+[void] $ws.UsedRange.Columns.AutoFit()
+$r = $ws.UsedRange
+$tr = $xl.WorksheetFunction.Transpose($r.Value2)
+$r.Delete()
+$xl.ActiveSheet.Range("A1").Resize($tr.GetUpperBound(0), $tr.GetUpperBound(1)) = $tr
 $Chart = $ws.Shapes.AddChart().Chart
-$Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlLine
+$Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
+$Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory)
+$Chart.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).AxisBetweenCategories = $false 
 Pause
 $wb.CLose()
 $xl.Quit()
