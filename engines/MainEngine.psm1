@@ -27,7 +27,8 @@ function GenerateCompleteConfiguration {
 function GenerateCoords {
     param (
         [parameter(Mandatory=$true)] [hashtable] $_CompleteConfiguration,
-        [parameter(Mandatory=$true)] $_OutputConfigFilepath
+        [parameter(Mandatory=$true)] $_OutputConfigFilepath,
+        [parameter(Mandatory=$true)] $_InitialTime
     )
     [System.Random]$rnd = [System.Random]::new()
     for ($PatternIndex = 0; $PatternIndex -lt $_CompleteConfiguration.Count; $PatternIndex++) {
@@ -35,7 +36,7 @@ function GenerateCoords {
             [Plane]$Plane = CreatePlane -PlanePatternConfiguration $_CompleteConfiguration[$PatternIndex.ToString()].PatternConfiguration -World $_CompleteConfiguration['WorldCoordConfiguration'] -rnd $rnd
             $PlaneIsOnMap = $false
             Write-Host -Object ("Generating coords for " + $Plane.PlaneID) -ForegroundColor Green
-            $Step = $rnd.Next($InitialTime,($InitialTime+5000))
+            $Step = $rnd.Next($_InitialTime,($_InitialTime+5000))
             $CurrStep = -1
             while ($Plane.CanFly) {
                 $CurrStep++

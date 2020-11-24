@@ -1,5 +1,5 @@
 param (
-    [parameter(Mandatory=$false)] [System.Int32] $InitialTime = 0
+    [parameter(Mandatory=$false)] [System.Int64] $InitialTime = 0
 )
 nal -Name "tp" -Value "Test-Path" -ErrorAction SilentlyContinue
 ipmo "./modules/Errors.psm1"  -ErrorAction Stop

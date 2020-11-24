@@ -3,7 +3,7 @@ param (
 )
 $DataForExcel = [System.Collections.ArrayList]::new()
 $i = 0
-$TimeShift = $shift
+$TimeShift = 0
 $OutputConfigFile = gc "./conf/Output.txt"
 $OutputConfigFile | % {
     $t = 0
@@ -21,7 +21,7 @@ $OutputConfigFile | % {
                     break;
                 }
             }
-            $Count = (($OutputConfigFile[$i..$k] | foreach {$_[3]}) | sort -Unique).Count
+            $Count = (($OutputConfigFile[$i..$k] | foreach {$_ -split ";" | select -Index 3}) | sort -Unique).Count
             [void] $DataForExcel.Add(($TimeShift,$Count))
             $i = $k
             $TimeShift += $shift
@@ -45,9 +45,11 @@ $tr = $xl.WorksheetFunction.Transpose($r.Value2)
 $r.Delete()
 $xl.ActiveSheet.Range("A1").Resize($tr.GetUpperBound(0), $tr.GetUpperBound(1)) = $tr
 $Chart = $ws.Shapes.AddChart().Chart
+$Chart.Parent.Height = 560
+$Chart.Parent.Width = 1000
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
 $Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory)
-$Chart.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).AxisBetweenCategories = $false 
+#$Chart.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).AxisBetweenCategories = $false 
 Pause
 $wb.CLose()
 $xl.Quit()
