@@ -28,6 +28,7 @@ $OutputConfigFile | % {
         }
     }
 }
+[void] $DataForExcel.Add(($TimeShift,0))
 Add-Type -AssemblyName Microsoft.Office.Interop.Excel
 $xl = New-Object -ComObject Excel.Application
 $xl.DisplayAlerts = $false
