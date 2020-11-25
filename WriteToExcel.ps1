@@ -49,8 +49,7 @@ $Chart = $ws.Shapes.AddChart().Chart
 $Chart.Parent.Height = 560
 $Chart.Parent.Width = 1000
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
-$Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory)
-#$Chart.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).AxisBetweenCategories = $false 
+$Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory) 
 Pause
 $wb.CLose()
 $xl.Quit()
