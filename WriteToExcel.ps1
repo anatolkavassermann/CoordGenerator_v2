@@ -18,7 +18,6 @@ $OutputConfigFile | % {
     if (($TimeShift -gt $finish) -and ($finish -ne 0)) {
         return;
     }
-    #Write-Host "done"
     $t = 0
     $s = [System.Int32]::TryParse($_.Substring(1,$_.IndexOf(">")-1), [ref] $t)
     if ($s -eq $true) {
