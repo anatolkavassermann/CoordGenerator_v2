@@ -14,13 +14,13 @@ function CheckMainSectionConfiguration () {
 							"PatternsToUse"
 							{
                                 [System.String[]]$PatternNames = $Parameter.Data.Split("|")
-                                $PatternNames | % {if ($_ -eq ""){ShowMessageWrongConf -Section $MainSection.Name -ParameterName $Parameter.ParamName -ErrorMessage "Pattern name cannot be empty"}}
+                                $PatternNames | ForEach-Object {if ($_ -eq ""){ShowMessageWrongConf -Section $MainSection.Name -ParameterName $Parameter.ParamName -ErrorMessage "Pattern name cannot be empty"}}
                                 break;
 							}
 							"EachPatternCount"
 							{
                                 [System.Collections.ArrayList]$EachPatternCount = [System.Collections.ArrayList]::new()
-                                $Parameter.Data.Split("|") | % {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
+                                $Parameter.Data.Split("|") | ForEach-Object {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
                                 break;
 							}
                         }

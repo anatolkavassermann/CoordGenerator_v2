@@ -1,4 +1,4 @@
-Add-Type ((gc .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections"
+Add-Type ((Get-Content .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections"
 
 function ReturnFormattedData {
     param (

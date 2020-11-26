@@ -47,7 +47,7 @@ function GenerateCoords {
                     $false {
                         [System.Int64]$Milisecond = $Step
                         [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
-                        "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | ac -Path $_OutputConfigFilepath -NoNewline:$false
+                        "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | Add-Content -Path $_OutputConfigFilepath -NoNewline:$false
                         $PlaneIsOnMap = $true
                         break;
                     }
@@ -58,7 +58,7 @@ function GenerateCoords {
                         $Step ++
                         [System.Int64]$Milisecond = $Plane.RefreshRate + $Milisecond
                         [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
-                        "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | ac -Path $_OutputConfigFilepath -NoNewline:$false
+                        "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | Add-Content -Path $_OutputConfigFilepath -NoNewline:$false
                         break;
                     }
                     $false {

@@ -2,9 +2,9 @@ param (
     [parameter(Mandatory=$true)] [System.Int64]$InitialTime
 )
 
-tp ".\conf\Output.txt" | % {if ($_ -eq $false) {ni -i File -p ".\conf\Output.txt" | rvpa}; if ($_ -eq $true) {gci ".\conf\Output.txt" | rvpa}} | sv OutputConfigFilepath
+tp ".\conf\Output.txt" | ForEach-Object {if ($_ -eq $false) {New-Item -i File -p ".\conf\Output.txt" | Resolve-Path}; if ($_ -eq $true) {Get-ChildItem ".\conf\Output.txt" | Resolve-Path}} | Set-Variable OutputConfigFilepath
 try {
-    (gc .\conf\main_conf.xml -ErrorAction Stop) -as [xml] | sv -Name Configuration
+    (Get-Content .\conf\main_conf.xml -ErrorAction Stop) -as [xml] | Set-Variable -Name Configuration
 }
 catch {
     ShowMessageWrongConf -ErrorType "File" -ErrorMessage $Error[0].exception.Message
