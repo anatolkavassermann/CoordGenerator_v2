@@ -1,11 +1,24 @@
 param (
-    [parameter(Mandatory=$false)] [System.Int32] $shift = 20000
+    [parameter(Mandatory=$true)] [System.Int32] $shift = 20000,
+    [parameter(Mandatory=$true)] [System.Int32] $finish = 0
 )
+
+switch ([System.Environment]::OSVersion.VersionString -match "Unix") {
+    $true { 
+        Write-Host -ForegroundColor Red -Object "Excel does not support Unix! Exiting"
+        exit;
+    }
+}
+
 $DataForExcel = [System.Collections.ArrayList]::new()
 $i = 0
 $TimeShift = 0
 $OutputConfigFile = gc "./conf/Output.txt"
 $OutputConfigFile | % {
+    if (($TimeShift -gt $finish) -and ($finish -ne 0)) {
+        return;
+    }
+    #Write-Host "done"
     $t = 0
     $s = [System.Int32]::TryParse($_.Substring(1,$_.IndexOf(">")-1), [ref] $t)
     if ($s -eq $true) {
@@ -28,7 +41,11 @@ $OutputConfigFile | % {
         }
     }
 }
-[void] $DataForExcel.Add(($TimeShift,0))
+switch ($finish) {
+    0 {
+        [void] $DataForExcel.Add(($TimeShift,0))
+    }
+}
 Add-Type -AssemblyName Microsoft.Office.Interop.Excel
 $xl = New-Object -ComObject Excel.Application
 $xl.DisplayAlerts = $false
