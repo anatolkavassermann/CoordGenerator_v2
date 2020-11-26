@@ -1,6 +1,6 @@
 param (
-    [parameter(Mandatory=$true)] [System.Int32] $shift = 20000,
-    [parameter(Mandatory=$true)] [System.Int32] $finish = 0
+    [parameter(Mandatory=$false)] [System.Int32] $shift = 20000,
+    [parameter(Mandatory=$false)] [System.Int32] $finish = 0
 )
 
 switch ([System.Environment]::OSVersion.VersionString -match "Unix") {
