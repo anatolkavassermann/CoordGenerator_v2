@@ -46,8 +46,8 @@ $tr = $xl.WorksheetFunction.Transpose($r.Value2)
 $r.Delete()
 $xl.ActiveSheet.Range("A1").Resize($tr.GetUpperBound(0), $tr.GetUpperBound(1)) = $tr
 $Chart = $ws.Shapes.AddChart().Chart
-$Chart.Parent.Height = 560
-$Chart.Parent.Width = 1000
+$Chart.Parent.Height = 280
+$Chart.Parent.Width = 500
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
 $Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory) 
 Pause

@@ -409,4 +409,94 @@ namespace GEO_classes
             }
         }
     }
+    public class Sphere
+    {
+        static public double A_E = 6371.0;
+        static public double[] SphereToCart(double lat, double lon)
+        {
+            double x = Math.Cos(lat) * Math.Cos(lon);
+            double y = Math.Cos(lat) * Math.Sin(lon);
+            double z = Math.Sin(lat);
+            return (new double[3] { x, y, z });
+        }
+        static public double[] CartToSphere(double x, double y, double z)
+        {
+            double lat = Math.Atan2(z, Math.Sqrt(x * x + y * y));
+            double lon = Math.Atan2(y, x);
+            return (new double[2] { lat, lon });
+        }
+        static public double[] Rotate(double x, double y, double a)
+        {
+            double c = Math.Cos(a);
+            double s = Math.Sin(a);
+            double u = x * c + y * s;
+            double v = -x * s + y * c;
+            return (new double[2] { u, v });
+        }
+        static public double[] Inverse(double lat1, double lon1, double lat2, double lon2)
+        {
+            double[] t = SphereToCart(lat2, lon2);
+            double x = t[0];
+            double y = t[1];
+            double z = t[2];
+            t = Rotate(x, y, lon1);
+            x = t[0];
+            y = t[1];
+            t = Rotate(z, x, Math.PI / 2 - lat1);
+            z = t[0];
+            x = t[1];
+            t = CartToSphere(x, y, z);
+            double lat = t[0];
+            double lon = t[1];
+            double dist = Math.PI / 2 - lat;
+            double azi = Math.PI - lon;
+            return (new double[2] { dist, azi });
+        }
+        static public double[] Direct(double lat1, double lon1, double dist, double azi)
+        {
+            double[] t = SphereToCart(Math.PI / 2 - dist, Math.PI - azi);
+            double x = t[0];
+            double y = t[1];
+            double z = t[2];
+            t = Rotate(z, x, lat1 - Math.PI / 2);
+            z = t[0];
+            x = t[1];
+            t = Rotate(x, y, -lon1);
+            x = t[0];
+            y = t[1];
+            t = CartToSphere(x, y, z);
+            double lat2 = t[0];
+            double lon2 = t[1];
+            return (new double[2] { lat2, lon2 });
+        }
+        static public double Radians(double x)
+        {
+            return (x / 57.29577951308232);
+        }
+        static public double Degrees(double x)
+        {
+            return (x * 57.29577951308232);
+        }
+        static public Hashtable CalculateCoords (Hashtable Point1, double azi, double dist)
+        {
+            double lat1 = (double)Point1["latitude"];
+            double lon1 = (double)Point1["longtitude"];
+            lat1 = Radians(lat1);
+            lon1 = Radians(lon1);
+            double azi1 = Radians(azi);
+            double dist1 = dist / A_E;
+            double[] t = Direct(lat1, lon1, dist1, azi1);
+            double lat2 = t[0];
+            double lon2 = t[1];
+            t = Inverse(lat2, lon2, lat1, lon1);
+            dist1 = t[0];
+            azi1 = t[1];
+            lat2 = Degrees(lat2);
+            lon2 = Degrees(lon2);
+            Hashtable Point2 = new Hashtable();
+            Point2.Add("latitude", lat2);
+            Point2.Add("longtitude", lon2);
+            return Point2;
+        }
+    }
 }
