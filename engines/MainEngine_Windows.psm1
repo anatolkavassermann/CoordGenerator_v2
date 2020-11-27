@@ -47,6 +47,7 @@ function GenerateCoords {
                     $false {
                         [System.Int64]$Milisecond = $Step
                         [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
+                        $flag = $false
                         while($flag -eq $false) {
                             try {
                                 "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | Add-Content -Path $_OutputConfigFilepath -NoNewline:$false -ErrorAction Stop
@@ -66,6 +67,7 @@ function GenerateCoords {
                         $Step ++
                         [System.Int64]$Milisecond = $Plane.RefreshRate + $Milisecond
                         [System.String]$OutputResult = ($Plane.Coords.latitude.ToString() + ":" + $Plane.Coords.longtitude.ToString())
+                        $flag = $false
                         while($flag -eq $false) {
                             try {
                                 "<" + $Milisecond.ToString() + ">" + $OutputResult + ";" + $Plane.CurrentHeight.ToString() + ";" + $Plane.CurrentAngle.ToString() + ";" + $Plane.PlaneID | Add-Content -Path $_OutputConfigFilepath -NoNewline:$false -ErrorAction Stop
