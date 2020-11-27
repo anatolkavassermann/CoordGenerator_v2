@@ -40,7 +40,7 @@ function GenerateCoords {
             $CurrStep = -1
             while ($Plane.CanFly) {
                 $CurrStep++
-                if ($CurrStep -ge 1000) {
+                if ($CurrStep -gt 1000) {
                     break;
                 }
                 switch ($PlaneIsOnMap) {
