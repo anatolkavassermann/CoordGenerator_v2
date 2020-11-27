@@ -1,5 +1,6 @@
 param (
-    [parameter(Mandatory=$false)] [System.Int64] $InitialTime = 0
+    [parameter(Mandatory=$false)] [System.Int64] $InitialTime = 0,
+    [parameter(Mandatory=$false)] [string] $EachPC
 )
 New-Alias -Name "tp" -Value "Test-Path" -ErrorAction SilentlyContinue
 Import-Module "./modules/Errors.psm1"  -ErrorAction Stop
@@ -21,4 +22,4 @@ switch ([System.Environment]::OSVersion.VersionString -match "Unix") {
     }
 }
 Add-Type ((Get-Content .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections" -ErrorAction SilentlyContinue
-./geo.ps1 -InitialTime $InitialTime
+./geo.ps1 -InitialTime $InitialTime -EachPC $EachPC

@@ -1,6 +1,7 @@
 function CheckMainSectionConfiguration () {
     param (
-        [parameter (Mandatory=$true)] [System.Xml.XmlNode] $MainSection
+        [parameter (Mandatory=$true)] [System.Xml.XmlNode] $MainSection,
+        [parameter (Mandatory=$false)] [System.String] $EachPC = "low"
     )
 
     [System.Int32]$PlanesToGenerate = 0
@@ -19,9 +20,18 @@ function CheckMainSectionConfiguration () {
 							}
 							"EachPatternCount"
 							{
-                                [System.Collections.ArrayList]$EachPatternCount = [System.Collections.ArrayList]::new()
-                                $Parameter.Data.Split("|") | ForEach-Object {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
-                                break;
+                                switch ($EachPC) {
+                                    default {
+                                        [System.Collections.ArrayList]$EachPatternCount = [System.Collections.ArrayList]::new()
+                                        $EachPC.Split("|") | ForEach-Object {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
+                                        break;
+                                    }
+                                    "low" {
+                                        [System.Collections.ArrayList]$EachPatternCount = [System.Collections.ArrayList]::new()
+                                        $Parameter.Data.Split("|") | ForEach-Object {$tmp = 0; $s = [System.Int32]::TryParse($_, [ref] $tmp); if ($s -eq $true) {[void] $EachPatternCount.Add($tmp)}}
+                                        break;
+                                    }
+                                }
 							}
                         }
                         break;
