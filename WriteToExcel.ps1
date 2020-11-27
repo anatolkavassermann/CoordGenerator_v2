@@ -2,7 +2,6 @@ param (
     [parameter(Mandatory=$false)] [System.Int32] $shift = 20000,
     [parameter(Mandatory=$false)] [System.Int32] $finish = 0
 )
-
 switch ([System.Environment]::OSVersion.VersionString -match "Unix") {
     $true { 
         Write-Host -ForegroundColor Red -Object "Excel does not support Unix! Exiting"
