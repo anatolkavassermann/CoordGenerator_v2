@@ -1,8 +1,10 @@
 param (
     [parameter(Mandatory=$true)] [System.Int64] $InitialTime,
-    [parameter(Mandatory=$false)] [string] $EachPC = "low"
+    [parameter(Mandatory=$false)] [string] $EachPC
 )
-
+if ($EachPC -eq "") {
+    $EachPC = "low"
+}
 tp ".\conf\Output.txt" | ForEach-Object {if ($_ -eq $false) {New-Item -i File -p ".\conf\Output.txt" | Resolve-Path}; if ($_ -eq $true) {Get-ChildItem ".\conf\Output.txt" | Resolve-Path}} | Set-Variable OutputConfigFilepath
 try {
     (Get-Content .\conf\main_conf.xml -ErrorAction Stop) -as [xml] | Set-Variable -Name Configuration
