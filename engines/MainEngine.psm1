@@ -90,7 +90,7 @@ function GenerateCoords {
                     $IsAccepted = $false
                     while ($IsAccepted -eq $false) {
                         [GEO_classes.Plane]$_Plane = CreatePlane -PlanePatternConfiguration $_CompleteConfiguration[$PatternIndex.ToString()].PatternConfiguration -World $_CompleteConfiguration['WorldCoordConfiguration'] -rnd $rnd
-                        Write-Host -Object ("Generating coords for " + $_Plane.PlaneID + ".") -ForegroundColor Green -NoNewline:$true
+                        Write-Host -Object ("Generating coords for " + $_Plane.PlaneID + ". ") -ForegroundColor Green -NoNewline:$true
                         $Result = PlaneFly -Plane $_Plane -_World $_CompleteConfiguration['WorldCoordConfiguration'] -_rnd $rnd -__InitialTime $_InitialTime
                         if ($Result -eq "Rejected") {
                             Write-Host -Object ($_Plane.PlaneID + " - Rejected!") -ForegroundColor Red -NoNewline:$false
