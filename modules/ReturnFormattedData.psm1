@@ -1,5 +1,4 @@
 Add-Type ((Get-Content .\classes\myData.cs) -as [String]) -ReferencedAssemblies "System","System.Collections"
-
 function ReturnFormattedData {
     param (
         [parameter (Mandatory=$true)] [System.String] $Section,

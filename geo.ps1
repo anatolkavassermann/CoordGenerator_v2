@@ -23,5 +23,4 @@ switch ($EachPC) {
     }
 }
 GenerateCoords -_InitialTime $InitialTime -_OutputConfigFilepath $OutputConfigFilepath -_CompleteConfiguration (GenerateCompleteConfiguration -_WorldCoordConfiguration $WorldCoordConfiguration -_PlanePatternConfiguration $PlanePatternConfiguration -_PatternsToGenerateConfiguration $PatternsToGenerateConfiguration)
-#Pause
 Write-Host -Object "Finished!" -ForegroundColor Green

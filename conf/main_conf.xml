@@ -7,7 +7,7 @@
         </param>
         <param>
             <ParamName>EachPatternCount</ParamName>
-            <Data>100|0</Data>
+            <Data>25|25</Data>
             <ParamDataType>None</ParamDataType>
         </param>
     </sectionMain>
@@ -19,7 +19,7 @@
 	    </param>
 	    <param>
 	    	<paramname>Distance</paramname>
-		    <data>5</data>
+		    <data>50</data>
 		    <paramdatatype>Distance</paramdatatype>
 	    </param>
     </sectionWorld>

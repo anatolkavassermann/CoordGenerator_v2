@@ -6,7 +6,7 @@ function CreatePlane {
     )
     [System.String]$ID = GenerateID
 	$CoordsAndAngle = GenerateCoordsAndAngle -World $World -rnd $rnd
-    [Plane]$PlaneObject = [Plane]::new(        
+    [GEO_classes.Plane]$PlaneObject = [GEO_classes.Plane]::new(        
 		$World,        
 		$PlanePatternConfiguration["PatternName"],		
 		($PlanePatternConfiguration["PatternName"] + "-" + $ID),		

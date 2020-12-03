@@ -1,6 +1,6 @@
 param (
-    [parameter(Mandatory=$false)] [System.Int32] $shift = 10000,
-    [parameter(Mandatory=$false)] [System.Int32] $finish = 1500000,
+    [parameter(Mandatory=$false)] [System.Int32] $shift = 1000,
+    [parameter(Mandatory=$false)] [System.Int32] $finish = 100000,
     [parameter(Mandatory=$false)] [System.Int32] $c = 1
 )
 function CountDataForExcel_Count {
@@ -112,16 +112,33 @@ function WriteTo-Excel {
             break;
         }
     }
-    [void] $ws.UsedRange.Clear()
-    [void] $ws.Range("A1").Select()
-    $OutputData_Count_1 | Set-Clipboard
-    $ws.Paste()
-    $r = $ws.UsedRange
-    $tr = $xl.WorksheetFunction.Transpose($r.Value2)
-    [void] $r.Delete()
-    $xl.ActiveSheet.Range("A1").Resize($tr.GetUpperBound(0), $tr.GetUpperBound(1)) = $tr
-    [void] $ws.UsedRange.Columns.AutoFit()
-    $Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory) 
+    $c = 1
+    $f = $false
+    while ($f -eq $false) {
+        try {
+            [void] $ws.UsedRange.Clear()
+            [void] $ws.Range("A1").Select()
+            $OutputData_Count_1 | Set-Clipboard
+            $ws.Paste()
+            $r = $ws.UsedRange
+            $tr = $xl.WorksheetFunction.Transpose($r.Value2)
+            [void] $r.Delete()
+            $xl.ActiveSheet.Range("A1").Resize($tr.GetUpperBound(0), $tr.GetUpperBound(1)) = $tr
+            [void] $ws.UsedRange.Columns.AutoFit()
+            $Chart.SetSourceData($ws.UsedRange, [Microsoft.Office.Core.XlAxisType]::xlCategory)
+            $Chart.Parent.Height = 500
+            $Chart.Parent.Width = 2000
+            $f = $true
+        }
+        catch {
+            sleep -Milliseconds 500
+            $c ++
+            if ($c -gt 5) {
+                Write-Host -ForegroundColor Red -Object "Error! Exiting!!"
+                Exit;
+            }
+        }
+    }
     Pause   
 }
 switch ([System.Environment]::OSVersion.VersionString -match "Unix") {
@@ -140,19 +157,14 @@ $ws = $wb.Worksheets.Add()
 $ws.Select()
 $ws.Name = "Iterations"
 $ChartNoAvg = $ws.Shapes.AddChart().Chart
-$ChartNoAvg.Parent.Height = 280
-$ChartNoAvg.Parent.Width = 1000
 $ChartNoAvg.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
-$ChartNoAvg.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).MajorUnit = $shift
-#$ChartNoAvg.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).MajorUnit = $shift
+$ChartNoAvg.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).MinorUnit = $shift
 $ws1 = $wb.Worksheets.Add()
 $ws1.Select()
 $ws1.Name = "Avg"
 $ChartAvg = $ws1.Shapes.AddChart().Chart
-$ChartAvg.Parent.Height = 280
-$ChartAvg.Parent.Width = 1000
 $ChartAvg.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xlXYScatterLinesNoMarkers
-$ChartAvg.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).MajorUnit = $shift
+$ChartAvg.Axes([Microsoft.Office.Core.XlAxisType]::xlCategory).MinorUnit = $shift
 $wb.Worksheets[$wb.Worksheets.Count].Delete()
 $OutputConfigFile = gci "./conf/Output.txt" | rvpa
 Test-Path ".\conf\Output1.txt" | ForEach-Object {if ($_ -eq $false) {New-Item -i File -p ".\conf\Output1.txt" | Resolve-Path}; if ($_ -eq $true) {Get-ChildItem ".\conf\Output1.txt" | Resolve-Path}} | Set-Variable OutputConfigFilepath
@@ -162,7 +174,6 @@ $Main = gci "./Main.ps1" | rvpa
 0..$c | % {
     (Read-Host -Prompt "Do you want to exit? [y/n]") | sv IfExit 
     if ($IfExit -eq "y") {
-            Read-Host -Prompt "Save data before exiting. If you exit, all unsaved data will be lost"
             $wb.CLose()
             $xl.Quit()
             [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xl) | Out-Null
@@ -170,8 +181,8 @@ $Main = gci "./Main.ps1" | rvpa
             break;
         
     }
-    (Read-Host -Prompt "Input InitialTime. Default is 0") -as [int] | sv InitialTime 
-    (Read-Host -Prompt "Set pattern Count. Default is set in main_conf.xml") -as [String] | sv EachPC
+    (Read-Host -Prompt "Input InitialTime") -as [int] | sv InitialTime 
+    (Read-Host -Prompt "Set pattern Count") -as [String] | sv EachPC
     switch ($EachPC) {
         "" {
             $EachPC = "low"
@@ -194,7 +205,7 @@ $Main = gci "./Main.ps1" | rvpa
     [void] $DataForExcel_Count.Add((CountDataForExcel_Count -File $t -_OutputConfigFilepath $OutputConfigFilepath -_finish $finish -_shift $shift))
     (Read-Host -Prompt "Do you want to view excel? [y/n]") -as [String] | sv ViewExcel
     switch ($ViewExcel) {
-        "y" {
+        "Y" {
             WriteTo-Excel -_DataForExcel_Count $DataForExcel_Count -_finish $finish -ifAvg $false -_wb $wb -Chart $ChartNoAvg
         }
         "" {
@@ -203,7 +214,7 @@ $Main = gci "./Main.ps1" | rvpa
     }
     (Read-Host -Prompt "Do you want to view excel with avg data? [y/n]") -as [String] | sv ViewExcel
     switch ($ViewExcel) {
-        "y" {
+        "Y" {
             WriteTo-Excel -_DataForExcel_Count $DataForExcel_Count -_finish $finish -ifAvg $true -_wb $wb -Chart $ChartAvg
         }
         "" {

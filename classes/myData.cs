@@ -266,7 +266,7 @@ namespace GEO_classes
             this.WorldTopRightCornerCoords = _WorldTopRightCornerCoords;
         }
     }
-    public class TestPlane
+    public class Plane
     {
         public World World;
         public bool CanFly;
@@ -288,7 +288,7 @@ namespace GEO_classes
         public double CurrentAngle;
         public double CurrentRotationAngle;
         public Random rnd;
-        public TestPlane(
+        public Plane(
                 World _World,
                 string _PatternName,
                 string _PlaneID,
@@ -312,30 +312,30 @@ namespace GEO_classes
             this.PlaneID = _PlaneID;
             this.RefreshRate = _RefreshRate;
             this.Coords = _Coords;
-            this.MinSpeed = _MinSpeed;
-            this.MaxSpeed = _MaxSpeed;
+            this.MinSpeed = Math.Abs(_MinSpeed);
+            this.MaxSpeed = Math.Abs(_MaxSpeed);
             this.SpeedAdjust = _SpeedAdjust;
             this.SpeedDecrease = _SpeedDecrease;
-            this.MinHeight = _MinHeight;
-            this.MaxHeight = _MaxHeight;
-            this.MaxUpDownAngle = _MaxUpDownAngle;
-            this.MaxRotateAngle = _MaxRotateAngle;
+            this.MinHeight = Math.Abs(_MinHeight);
+            this.MaxHeight = Math.Abs(_MaxHeight);
+            this.MaxUpDownAngle = Math.Abs(_MaxUpDownAngle);
+            this.MaxRotateAngle = Math.Abs(_MaxRotateAngle);
             this.CurrentAngle = _CurrentAngle;
             this.CurrentSpeed = this.rnd.Next((int)this.MinSpeed, (int)this.MaxSpeed);
             this.CurrentHeight = this.rnd.Next((int)this.MinHeight, (int)this.MaxHeight);
             this.CurrentRotationAngle = this.rnd.Next(0, (int)this.MaxRotateAngle);
-            if (this.rnd.Next(0,10)%2 == 0)
+            if (this.rnd.Next(0, 10) % 2 == 0)
             {
                 this.CurrentRotationAngle *= (-1);
             }
             this.CurrentUpDownAngle = this.rnd.Next(0, (int)this.MaxUpDownAngle);
             if (this.rnd.Next(0, 10) % 2 == 0)
             {
-                this.MaxUpDownAngle *= (-1);
+                this.CurrentUpDownAngle *= (-1);
             }
             this.CanFly = true;
         }
-        public void IncreaseSpeed()
+        private void IncreaseSpeed()
         {
             if ((this.CurrentSpeed < this.MaxSpeed) && (this.MaxSpeed - this.CurrentSpeed) >= this.SpeedAdjust)
             {
@@ -346,7 +346,7 @@ namespace GEO_classes
                 this.CurrentSpeed = this.MaxSpeed;
             }
         }
-        public void DecreaseSpeed()
+        private void DecreaseSpeed()
         {
             if ((this.CurrentSpeed > this.MinSpeed) && (this.CurrentSpeed - this.MinSpeed) >= this.SpeedAdjust)
             {
@@ -357,7 +357,7 @@ namespace GEO_classes
                 this.CurrentSpeed = this.MinSpeed;
             }
         }
-        public void CheckIfAngleIsGreaterThan360Degrees()
+        private void CheckIfAngleIsGreaterThan360Degrees()
         {
             if (this.CurrentAngle >= 360)
             {
@@ -368,7 +368,7 @@ namespace GEO_classes
                 this.CurrentAngle += 360;
             }
         }
-        public void RotateLeft()
+        private void RotateLeft()
         {
             if (this.CurrentRotationAngle + 1 < this.MaxRotateAngle)
             {
@@ -381,7 +381,7 @@ namespace GEO_classes
             }
             this.CheckIfAngleIsGreaterThan360Degrees();
         }
-        public void RotateRight()
+        private void RotateRight()
         {
             if (this.CurrentRotationAngle - 1 > (this.MaxRotateAngle) * -1)
             {
@@ -394,19 +394,152 @@ namespace GEO_classes
             }
             this.CheckIfAngleIsGreaterThan360Degrees();
         }
-        public void NoseUp()
+        private void NoseUp()
         {
             if (this.CurrentUpDownAngle + 1 < this.MaxUpDownAngle)
             {
                 this.CurrentUpDownAngle += 1;
             }
         }
-        public void NoseDown()
+        private void NoseDown()
         {
             if (this.CurrentUpDownAngle - 1 > this.MaxUpDownAngle * -1)
             {
                 this.CurrentUpDownAngle -= 1;
             }
+        }
+        private Hashtable CalculateTempCoords(double DistanceToGo)
+        {
+            Hashtable _TempCoords = this.Coords;
+            _TempCoords = Sphere.CalculateCoords(_TempCoords, this.CurrentAngle, DistanceToGo);
+            return _TempCoords;
+        }
+        private void Move()
+        {
+            double DistanceGone = (this.CurrentSpeed / 3600000) * this.RefreshRate;
+            DistanceGone = DistanceGone * Math.Cos(this.CurrentUpDownAngle);
+            double HeightGone = DistanceGone * Math.Tan(this.CurrentUpDownAngle);
+            this.CurrentHeight += HeightGone;
+            switch ((this.CurrentHeight > this.MaxHeight) || (this.CurrentHeight < this.MinHeight))
+            {
+                case true:
+                    {
+                        this.CanFly = false;
+                        return;
+                    }
+            }
+            Hashtable TempCoords = new Hashtable();
+            TempCoords = CalculateTempCoords(DistanceGone);
+            switch (Math.Abs((double)this.World.WorldTopLeftCornerCoords["longtitude"] - (double)this.World.WorldBottomLeftCornerCoords["longtitude"]) == 180)
+            {
+                case true:
+                    {
+                        switch ((double)this.World.WorldTopLeftCornerCoords["latitude"] < 0)
+                        {
+                            case true: {
+                                switch (((double)TempCoords["latitude"] > (double)this.World.WorldTopLeftCornerCoords["latitude"]) || ((double)TempCoords["latitude"] > (double)this.World.WorldBottomLeftCornerCoords["latitude"]))
+                                {
+                                    case true:
+                                    {
+                                        this.CanFly = false;
+                                        return;
+                                    }
+                                }
+                                break;
+                            }
+                            case false: {
+                                    switch (((double)TempCoords["latitude"] < (double)this.World.WorldTopLeftCornerCoords["latitude"]) || ((double)TempCoords["latitude"] < (double)this.World.WorldBottomLeftCornerCoords["latitude"]))
+                                    {
+                                        case true:
+                                            {
+                                                this.CanFly = false;
+                                                return;
+                                            }
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                    }
+                case false:
+                    {
+                        switch (((double)TempCoords["latitude"] > (double)this.World.WorldTopLeftCornerCoords["latitude"]) || ((double)TempCoords["latitude"] < (double)this.World.WorldBottomLeftCornerCoords["latitude"]))
+                        {
+                            case true:
+                                {
+                                    this.CanFly = false;
+                                    return;
+                                }
+                        }
+                        break;
+                    }
+            }
+            switch (((double)TempCoords["longtitude"] < (double)this.World.WorldTopLeftCornerCoords["longtitude"]) || ((double)TempCoords["longtitude"] > (double)this.World.WorldTopRightCornerCoords["longtitude"]))
+            {
+                case true:
+                    {
+                        this.CanFly = false;
+                        return;
+                    }
+            }
+            this.Coords = TempCoords;
+            return;
+        }
+        public void MakeStep()
+        {
+            switch (this.CanFly)
+            {
+                case true:
+                    {
+                        byte Command = (byte)this.rnd.Next(0, 7);
+                        switch (Command)
+                        {
+                            case 0:
+                                {
+                                    this.RotateLeft();
+                                    this.Move();
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    this.RotateRight();
+                                    this.Move();
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    this.IncreaseSpeed();
+                                    this.Move();
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    this.DecreaseSpeed();
+                                    this.Move();
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    this.NoseUp();
+                                    this.Move();
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    this.NoseDown();
+                                    this.Move();
+                                    break;
+                                }
+                            default:
+                                {
+                                    this.Move();
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+            }
+            return;
         }
     }
     public class Sphere
@@ -494,8 +627,8 @@ namespace GEO_classes
             lat2 = Degrees(lat2);
             lon2 = Degrees(lon2);
             Hashtable Point2 = new Hashtable();
-            Point2.Add("latitude", lat2);
-            Point2.Add("longtitude", lon2);
+            Point2.Add("latitude", Math.Round(lat2, 6));
+            Point2.Add("longtitude", Math.Round(lon2, 6));
             return Point2;
         }
     }

@@ -5,9 +5,9 @@ function CalculateWorldsCoords {
     [hashtable]$WorldTopLeftCornerCoords = $WorldConfiguration['WorldLeftCornerCoords']
     [System.Double]$WorldSide = $WorldConfiguration['WorldSide']
     [System.Double]$Angle = 180
-    [hashtable]$WorldsBottomLeftCornerCoords = CalculateCoords -InitCoords $WorldTopLeftCornerCoords -InitAngle $Angle -DistanceToGo $WorldSide
+    [hashtable]$WorldsBottomLeftCornerCoords = [GEO_classes.Sphere]::CalculateCoords($WorldTopLeftCornerCoords, $Angle, $WorldSide)#CalculateCoords -InitCoords $WorldTopLeftCornerCoords -InitAngle $Angle -DistanceToGo $WorldSide
     [System.Double]$Angle = 90
-    [hashtable]$WorldsTopRightCornerCoords = CalculateCoords -InitCoords $WorldTopLeftCornerCoords -InitAngle $Angle -DistanceToGo $WorldSide
+    [hashtable]$WorldsTopRightCornerCoords = [GEO_classes.Sphere]::CalculateCoords($WorldTopLeftCornerCoords, $Angle, $WorldSide)#CalculateCoords -InitCoords $WorldTopLeftCornerCoords -InitAngle $Angle -DistanceToGo $WorldSide
     [GEO_classes.World]$World = [GEO_classes.World]::new($WorldTopLeftCornerCoords, $WorldsBottomLeftCornerCoords, $WorldsTopRightCornerCoords)
     return $World
 }
