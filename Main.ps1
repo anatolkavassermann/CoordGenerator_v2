@@ -5,7 +5,6 @@ param (
 New-Alias -Name "tp" -Value "Test-Path" -ErrorAction SilentlyContinue
 Import-Module "./modules/Errors.psm1"  -ErrorAction Stop
 Import-Module "./modules/ReturnFormattedData.psm1"  -ErrorAction Stop
-Import-Module "./engines/CoordsCalculation.psm1" -ErrorAction Stop
 Import-Module "./engines/PlaneObjectCreationEngine.psm1" -ErrorAction Stop
 Import-Module "./engines/WorldCoordsCreationEngine.psm1" -ErrorAction Stop
 Import-Module "./parsers/WorldSectionParser.psm1"  -ErrorAction Stop
